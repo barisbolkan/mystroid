@@ -1,0 +1,61 @@
+steps:
+  # Cleans the project and then executes docker:stage to create Dockerfile and related binaries
+  - id: 'Build'
+    name: 'gcr.io/$PROJECT_ID/scala-sbt'
+    args: ['clean', 'docker:stage']
+
+  # Creates the docker images based on the Dockerfile and pushes the images to container registry
+  - id: 'Create Image - Core'
+    name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '--tag=gcr.io/$PROJECT_ID/mystroid-core:${SHORT_SHA}', './core/target/docker/stage']
+  - id: 'Create Image - API'
+    name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '--tag=gcr.io/$PROJECT_ID/mystroid-api:${SHORT_SHA}', './api/target/docker/stage']
+
+  # Deploy images to Kubernetes
+  - name: 'gcr.io/cloud-builders/kubectl'
+    id: 'Deployment[Apply] - Core'
+    args:
+      - 'apply'
+      - '-f'
+      - './core/'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-b'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=develop'
+  - name: 'gcr.io/cloud-builders/kubectl'
+    id: 'Deployment[Publish] - Core'
+    args: [
+      'set',
+      'image',
+      'deployment',
+      'mystroid-core',
+      'mystroid-core=gcr.io/$PROJECT_ID/mystroid-core:${SHORT_SHA}'
+    ]
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-b'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=develop'
+
+  # Deploy images to Kubernetes
+  - name: 'gcr.io/cloud-builders/kubectl'
+    id: 'Deployment[Apply] - API'
+    args:
+      - 'apply'
+      - '-f'
+      - './api/'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-b'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=develop'
+  - name: 'gcr.io/cloud-builders/kubectl'
+    id: 'Deployment[Publish] - API'
+    args: [
+      'set',
+      'image',
+      'deployment',
+      'mystroid-api',
+      'mystroid-api=gcr.io/$PROJECT_ID/mystroid-api:${SHORT_SHA}'
+    ]
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-b'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=develop'
+
+images: ['gcr.io/$PROJECT_ID/mystroid-core:${SHORT_SHA}', 'gcr.io/$PROJECT_ID/mystroid-api:${SHORT_SHA}']

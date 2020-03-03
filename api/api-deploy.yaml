@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mystroid-api
+  labels:
+    run: mystorid-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      run: mystroid-api
+  template:
+    metadata:
+      labels:
+        run: mystroid-api
+    spec:
+      containers:
+        - image: gcr.io/mystroid/mystroid-api:latest
+          name: mystroid-api
+          ports:
+            - containerPort: 8080
+              protocol: TCP

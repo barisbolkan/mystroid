@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mystroid-core
+  labels:
+    run: mystorid-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: mystroid-core
+  template:
+    metadata:
+      labels:
+        run: mystroid-core
+    spec:
+      containers:
+        - image: gcr.io/mystroid/mystroid-core:latest
+          name: mystroid-core

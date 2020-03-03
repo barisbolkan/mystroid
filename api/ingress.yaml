@@ -1,0 +1,8 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: mystorid-ingress
+spec:
+  backend:
+    serviceName: mystroid-api-service
+    servicePort: 8080
