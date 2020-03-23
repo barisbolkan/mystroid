@@ -3,7 +3,7 @@ import com.typesafe.sbt.packager.docker.Cmd
 import sbt.Keys.version
 
 ThisBuild / organization := "com.barisbolkan"
-ThisBuild / version := "0.0.3"
+ThisBuild / version := "0.0.4"
 ThisBuild / scalaVersion := "2.12.6"
 
 lazy val commonDependecies = Seq(
@@ -30,7 +30,7 @@ lazy val api = (project in file("api"))
     packageName in Docker := "mystorid/" + name.value,
     version in Docker := version.value,
     dockerLabels := Map("maintainer" -> organization.value, "version" -> version.value),
-    dockerBaseImage := "openjdk:8-jre-alpine",
+    dockerBaseImage := "openjdk:12-jre-alpine",
     defaultLinuxInstallLocation in Docker := s"/opt/${name.value}",
     dockerExposedPorts ++= Seq(8080),
     dockerCommands := dockerCommands.value.flatMap {
@@ -53,7 +53,7 @@ lazy val core = (project in file("core"))
     packageName in Docker := "mystorid/" + name.value,
     version in Docker := version.value,
     dockerLabels := Map("maintainer" -> organization.value, "version" -> version.value),
-    dockerBaseImage := "openjdk:8-jre-alpine",
+    dockerBaseImage := "openjdk:12-jre-alpine",
     defaultLinuxInstallLocation in Docker := s"/opt/${name.value}",
     dockerCommands := dockerCommands.value.flatMap {
       case cmd@Cmd("FROM", _) => List(cmd, Cmd("RUN", "apk update && apk add bash"))
