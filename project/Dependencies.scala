@@ -16,6 +16,7 @@ object Dependencies {
   val akkaHttp2 = "com.typesafe.akka" %% "akka-http2-support" % akkaHttpVersion
   val pubsub = "com.lightbend.akka" %% "akka-stream-alpakka-google-cloud-pub-sub-grpc" % alpakkaVersion
   val mongo = "com.lightbend.akka" %% "akka-stream-alpakka-mongodb" % alpakkaVersion
+  val reactiveMongo = "org.mongodb" % "mongodb-driver-reactivestreams" % "4.0.1"
 
   // Logging
   val logBackClassic = "ch.qos.logback" % "logback-classic" % logVersion

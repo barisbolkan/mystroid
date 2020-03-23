@@ -23,6 +23,8 @@
         </encoder>
     </appender>
 
+    <logger name="org.mongodb.driver" level="ERROR"/>
+
     <root>
         <appender-ref ref="CONSOLE"/>
     </root>

@@ -25,6 +25,7 @@ lazy val api = (project in file("api"))
     mainClass in Compile := Some("com.barisbolkan.mystroid.api.WebServer"),
     libraryDependencies ++= commonDependecies ++ Seq(
       mongo,
+      reactiveMongo,
       streamTestKit % Test
     ),
     packageName in Docker := "mystorid/" + name.value,
