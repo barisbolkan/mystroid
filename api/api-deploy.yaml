@@ -15,8 +15,29 @@ spec:
         run: mystroid-api
     spec:
       containers:
-        - image: gcr.io/mystroid/mystroid-api:latest
-          name: mystroid-api
+        - name: mystroid-api
+          image: gcr.io/mystroid/mystroid-api:latest
+          env:
+            - name: PUBSUB_HOST
+              value: "pubsub.googleapis.com"
+            - name: PUBSUB_PORT
+              value: "443"
+            - name: PUBSUB_ROOT_CA
+              value: "GoogleInternetAuthorityG3.crt"
+            - name: PUBSUB_CALL_CREDENTIALS
+              value: "google-application-default"
+            - name: HTTP_HOST
+              value: "0.0.0.0"
+            - name: HTTP_PORT
+              value: "8080"
+            - name: MONGO_USERNAME
+              value: "mystroid"
+            - name: MONGO_PASSWORD
+              value: "254IwqycmU47gwv0"
+            - name: MONGO_DB
+              value: "mystroid"
+            - name: MONGO_COLL
+              value: "astroids"
           ports:
             - containerPort: 8080
               protocol: TCP

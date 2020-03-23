@@ -8,7 +8,10 @@ ThisBuild / scalaVersion := "2.12.6"
 
 lazy val commonDependecies = Seq(
   akkaTyped, akkaHttp, akkaStream, logBack,
-  testKit % Test, scalaTest % Test
+  testKit % Test, scalaTest % Test, scalaMock % Test, circeCore, circeGeneric, circeParser,
+  akkaDiscovery % Provided,
+  akkaHttp2 % Provided,
+  pubsub, netty,
 )
 
 lazy val api = (project in file("api"))
@@ -19,7 +22,10 @@ lazy val api = (project in file("api"))
     buildInfoPackage := "com.barisbolkan.mystroid.api",
     buildInfoOptions += BuildInfoOption.ToJson,
     mainClass in Compile := Some("com.barisbolkan.mystroid.api.WebServer"),
-    libraryDependencies ++= commonDependecies,
+    libraryDependencies ++= commonDependecies ++ Seq(
+      mongo,
+      streamTestKit % Test
+    ),
     packageName in Docker := "mystorid/" + name.value,
     version in Docker := version.value,
     dockerLabels := Map("maintainer" -> organization.value, "version" -> version.value),
@@ -40,7 +46,9 @@ lazy val core = (project in file("core"))
     buildInfoPackage := "com.barisbolkan.mystroid.core",
     buildInfoOptions += BuildInfoOption.ToJson,
     mainClass in Compile := Some("com.barisbolkan.mystroid.core.DataProcessor"),
-    libraryDependencies ++= commonDependecies,
+    libraryDependencies ++= commonDependecies ++ Seq(
+      akkaHttpCirce
+    ),
     packageName in Docker := "mystorid/" + name.value,
     version in Docker := version.value,
     dockerLabels := Map("maintainer" -> organization.value, "version" -> version.value),

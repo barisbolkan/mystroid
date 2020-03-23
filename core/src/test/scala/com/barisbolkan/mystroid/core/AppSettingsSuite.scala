@@ -1,8 +1,9 @@
-package com.barisbolkan.mystroid.api
+package com.barisbolkan.mystroid.core
 
-import com.barisbolkan.mystroid.api.configuration.AppSettings
+import com.barisbolkan.mystroid.core.configuration.AppSettings
 import com.typesafe.config.{Config, ConfigException, ConfigFactory}
 import org.scalatest.funsuite.AnyFunSuite
+import scala.concurrent.duration._
 
 class AppSettingsSuite extends AnyFunSuite {
 
@@ -12,7 +13,12 @@ class AppSettingsSuite extends AnyFunSuite {
       """
         |mystroid {
         |
-        |  http {
+        |  nasa {
+        |    url = "https://api.nasa.gov/"
+        |    schedule-period = 2 hours
+        |  }
+        |
+        |  health {
         |    host = "0.0.0.0"
         |    port = 8080
         |  }
@@ -28,8 +34,10 @@ class AppSettingsSuite extends AnyFunSuite {
 
     val settings: AppSettings = AppSettings(fakeConfig)
 
-    assert(settings.http.host == "0.0.0.0")
-    assert(settings.http.port == 8080)
+    assert(settings.health.host == "0.0.0.0")
+    assert(settings.health.port == 8080)
+    assert(settings.nasa.url == "https://api.nasa.gov/")
+    assert(settings.nasa.schedulePeriod == 2.hours)
     assert(settings.pubsub.subscription == "projects/mystroid/topics/astroid-data")
   }
 
@@ -53,8 +61,9 @@ class AppSettingsSuite extends AnyFunSuite {
           |}
         """.stripMargin).resolve()
 
-      val host = AppSettings(fakeConfig).http.host
+      val host = AppSettings(fakeConfig).health.host
     }
   }
 
 }
+
