@@ -3,11 +3,12 @@ import com.typesafe.sbt.packager.docker.Cmd
 import sbt.Keys.version
 
 ThisBuild / organization := "com.barisbolkan"
-ThisBuild / version := "0.0.2"
+ThisBuild / version := "0.0.3"
 ThisBuild / scalaVersion := "2.12.6"
 
 lazy val commonDependecies = Seq(
-  akkaTyped, akkaHttp, akkaStream, logBack,
+  akkaTyped, akkaHttp, akkaStream,
+  logBackClassic, logBackCore, logBackAccess, logBackEncoder,
   testKit % Test, scalaTest % Test, scalaMock % Test, circeCore, circeGeneric, circeParser,
   akkaDiscovery % Provided,
   akkaHttp2 % Provided,

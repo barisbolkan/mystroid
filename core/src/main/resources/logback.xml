@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender" >
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder" >
+            <providers>
+                <mdc/>
+                <pattern>
+                    <pattern>
+                        {
+                        "timestamp": "%date{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}",
+                        "severity": "%level",
+                        "thread": "%thread",
+                        "logger": "%logger",
+                        "serviceContext": {
+                        "service": "${NAMESPACE}/mystroid-core",
+                        "version":"${VERSION}"
+                        },
+                        "message": "%message %ex"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
+
+    <root>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>

@@ -6,6 +6,7 @@ object Dependencies {
   val akkaHttpVersion = "10.1.11"
   val alpakkaVersion = "1.1.2"
   val circeVersion = "0.12.3"
+  val logVersion = "1.2.3"
 
   // Akka
   val akkaTyped = "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion
@@ -17,7 +18,10 @@ object Dependencies {
   val mongo = "com.lightbend.akka" %% "akka-stream-alpakka-mongodb" % alpakkaVersion
 
   // Logging
-  val logBack = "ch.qos.logback" % "logback-classic" % "1.2.3"
+  val logBackClassic = "ch.qos.logback" % "logback-classic" % logVersion
+  val logBackCore = "ch.qos.logback" % "logback-core" % logVersion
+  val logBackAccess = "ch.qos.logback" % "logback-access" % logVersion
+  val logBackEncoder = "net.logstash.logback" % "logstash-logback-encoder" % "4.11"
 
   // Misc
   val circeCore = "io.circe" %% "circe-core" % circeVersion
