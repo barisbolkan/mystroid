@@ -97,6 +97,7 @@ object WebServer extends SettingsSupport
   }
 
   def main(args: Array[String]): Unit = {
+    System.setProperty("org.mongodb.async.type", "netty")
     ActorSystem(WebServer(config.http.host, config.http.port), "web-server")
   }
 }
