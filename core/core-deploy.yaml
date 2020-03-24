@@ -17,3 +17,6 @@ spec:
       containers:
         - image: gcr.io/mystroid/mystroid-core:latest
           name: mystroid-core
+          envFrom:
+            - configMapRef:
+                name: mystroid-core-master
