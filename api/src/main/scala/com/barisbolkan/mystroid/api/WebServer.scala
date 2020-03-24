@@ -54,7 +54,7 @@ object WebServer extends SettingsSupport
     implicit val materializer: Materializer = Materializer(context.system.toClassic)
     implicit val ec: ExecutionContext = system.executionContext
 
-    context.log.info("Mystroid web-server is starting.")
+    context.log.info(s"Mystroid web-server is starting.Variables: [${config.mongo.connectionString.toString}]")
 
     val mongoClient = MongoClients.create(config.mongo.connectionString)
     implicit val db = mongoClient.getDatabase(config.mongo.dbName)
