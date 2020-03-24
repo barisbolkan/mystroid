@@ -14,9 +14,16 @@ spec:
       labels:
         run: mystroid-core
     spec:
+      volumes:
+        - name: google-cloud-key
+          secret:
+            secretName: mystroid-pubsub-key
       containers:
         - image: gcr.io/mystroid/mystroid-core:latest
           name: mystroid-core
+          volumeMounts:
+            - name: google-cloud-key
+              mountPath: /var/secrets/google
           envFrom:
             - configMapRef:
                 name: mystroid-core-master
