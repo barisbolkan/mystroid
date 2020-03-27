@@ -3,7 +3,7 @@ import com.typesafe.sbt.packager.docker.Cmd
 import sbt.Keys.version
 
 ThisBuild / organization := "com.barisbolkan"
-ThisBuild / version := "0.0.4"
+ThisBuild / version := "0.0.5"
 ThisBuild / scalaVersion := "2.12.6"
 
 lazy val commonDependecies = Seq(
@@ -12,7 +12,7 @@ lazy val commonDependecies = Seq(
   testKit % Test, scalaTest % Test, scalaMock % Test, circeCore, circeGeneric, circeParser,
   akkaDiscovery % Provided,
   akkaHttp2 % Provided,
-  pubsub, netty,
+  pubsub,
 )
 
 lazy val api = (project in file("api"))

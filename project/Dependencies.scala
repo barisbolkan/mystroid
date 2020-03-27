@@ -29,7 +29,6 @@ object Dependencies {
   val circeGeneric = "io.circe" %% "circe-generic" % circeVersion
   val circeParser = "io.circe" %% "circe-parser" % circeVersion
   val akkaHttpCirce = "de.heikoseeberger" %% "akka-http-circe" % "1.31.0"
-  val netty = "io.netty" % "netty-all" % "4.1.17.Final"
 
   // Tests
   val testKit = "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion
