@@ -110,7 +110,7 @@ trait StreamingService extends FailFastCirceSupport {
 
       // Shape of the flows
       val toHttp = builder.add(httpFlow())
-      val toConvert = builder.add(convert(settings.pubsub.topic))
+      val toConvert = builder.add(convert(settings.pubsub.subscription))
       val toPublish = builder.add(publisher()(1))
 
       // Processing
