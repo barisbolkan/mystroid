@@ -67,7 +67,6 @@ trait DataService extends JsonSupport {
       import GraphDSL.Implicits._
 
       val bcast = builder.add(Broadcast[ReceivedMessage](2))
-      val ending = builder.add(Flow[AcknowledgeRequest])
 
       // Split the stream
       pubsubSource ~> sw ~> bcast
@@ -82,7 +81,7 @@ trait DataService extends JsonSupport {
         * This setup is just sending acknowledgement to pubsub
         */
       bcast ~> Flow[ReceivedMessage]
-        .map(rm => AcknowledgeRequest(settings.pubsub.subscription, Seq(rm.ackId))) ~> ending
+        .map(rm => AcknowledgeRequest(settings.pubsub.subscription, Seq(rm.ackId))) ~> ackSink
 
       ClosedShape
     })
