@@ -10,13 +10,8 @@ import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.result.UpdateResult
 import com.mongodb.reactivestreams.client.{MongoCollection, MongoDatabase}
 import io.circe.Decoder
-import org.bson.Document
 import io.circe.parser.decode
-
-case class Diameter(min: Double, max: Double)
-case class ApproachData(date: ZonedDateTime, velocity: Double, missDistance: Double)
-case class AstroidInfo(id: String, neoRefId: String, name: String, absoluteMagnitude: Double,
-                       estimatedDiameter: Diameter, isHazardous: Boolean, closeApproachData: List[ApproachData])
+import org.bson.Document
 
 trait MongoRepository {
   protected def collectionName: String
@@ -34,4 +29,10 @@ trait MongoRepository {
 trait MystroidRepository extends MongoRepository {
   protected val collectionName: String = "astroid-info"
 }
-object MystroidRepository extends MystroidRepository
+object MystroidRepository extends MystroidRepository {
+
+  case class Diameter(min: Double, max: Double)
+  case class ApproachData(date: ZonedDateTime, velocity: Double, missDistance: Double)
+  case class AstroidInfo(id: String, neoRefId: String, name: String, absoluteMagnitude: Double,
+                         estimatedDiameter: Diameter, isHazardous: Boolean, closeApproachData: List[ApproachData])
+}
