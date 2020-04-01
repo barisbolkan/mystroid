@@ -14,8 +14,6 @@ case class AppSettings(config: Config) {
   }
 
   object pubsub {
-    val projectId: String = config.getString("mystroid.pubsub.project-id")
-    val topic: String = config.getString("mystroid.pubsub.topic")
     val subscription: String = config.getString("mystroid.pubsub.subscription")
   }
 

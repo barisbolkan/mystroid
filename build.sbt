@@ -3,8 +3,8 @@ import com.typesafe.sbt.packager.docker.Cmd
 import sbt.Keys.version
 
 ThisBuild / organization := "com.barisbolkan"
-ThisBuild / version := "0.0.7"
-ThisBuild / scalaVersion := "2.12.6"
+ThisBuild / version := "0.0.8"
+ThisBuild / scalaVersion := "2.12.10"
 
 lazy val commonDependecies = Seq(
   akkaTyped, akkaHttp, akkaStream,
@@ -24,14 +24,13 @@ lazy val api = (project in file("api"))
     buildInfoOptions += BuildInfoOption.ToJson,
     mainClass in Compile := Some("com.barisbolkan.mystroid.api.WebServer"),
     libraryDependencies ++= commonDependecies ++ Seq(
-      mongo,
-      reactiveMongo,
+      mongo, alpakkaMongo,
       streamTestKit % Test
     ),
     packageName in Docker := "mystorid/" + name.value,
     version in Docker := version.value,
     dockerLabels := Map("maintainer" -> organization.value, "version" -> version.value),
-    dockerBaseImage := "openjdk:12-jdk-alpine",
+    dockerBaseImage := "openjdk:14-jdk-alpine",
     defaultLinuxInstallLocation in Docker := s"/opt/${name.value}",
     dockerExposedPorts ++= Seq(8080),
     dockerCommands := dockerCommands.value.flatMap {
@@ -54,7 +53,7 @@ lazy val core = (project in file("core"))
     packageName in Docker := "mystorid/" + name.value,
     version in Docker := version.value,
     dockerLabels := Map("maintainer" -> organization.value, "version" -> version.value),
-    dockerBaseImage := "openjdk:12-jdk-alpine",
+    dockerBaseImage := "openjdk:14-jdk-alpine",
     defaultLinuxInstallLocation in Docker := s"/opt/${name.value}",
     dockerCommands := dockerCommands.value.flatMap {
       case cmd@Cmd("FROM", _) => List(cmd, Cmd("RUN", "apk update && apk add bash"))

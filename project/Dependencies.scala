@@ -4,7 +4,6 @@ object Dependencies {
 
   val akkaVersion = "2.6.3"
   val akkaHttpVersion = "10.1.11"
-  val alpakkaVersion = "1.1.2"
   val circeVersion = "0.12.3"
   val logVersion = "1.2.3"
 
@@ -14,9 +13,9 @@ object Dependencies {
   val akkaDiscovery = "com.typesafe.akka" %% "akka-discovery" % akkaVersion
   val akkaHttp = "com.typesafe.akka" %% "akka-http" % akkaHttpVersion
   val akkaHttp2 = "com.typesafe.akka" %% "akka-http2-support" % akkaHttpVersion
-  val pubsub = "com.lightbend.akka" %% "akka-stream-alpakka-google-cloud-pub-sub-grpc" % alpakkaVersion
-  val mongo = "com.lightbend.akka" %% "akka-stream-alpakka-mongodb" % alpakkaVersion
-  val reactiveMongo = "org.mongodb" % "mongodb-driver-reactivestreams" % "4.0.1"
+  val pubsub = "com.lightbend.akka" %% "akka-stream-alpakka-google-cloud-pub-sub-grpc" % "1.1.2"
+  val alpakkaMongo = "com.lightbend.akka" %% "akka-stream-alpakka-mongodb" % "2.0.0-RC1"
+  val mongo = "org.mongodb.scala" %% "mongo-scala-driver" % "2.8.0"
 
   // Logging
   val logBackClassic = "ch.qos.logback" % "logback-classic" % logVersion
