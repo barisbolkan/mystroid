@@ -6,7 +6,7 @@ import akka.NotUsed
 import akka.actor.typed._
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.adapter._
-import akka.stream.{KillSwitches, Materializer, SharedKillSwitch}
+import akka.stream.{ActorAttributes, KillSwitches, Materializer, SharedKillSwitch, Supervision}
 import com.barisbolkan.mystroid.core.processing.StreamingService
 
 import scala.concurrent.ExecutionContext
@@ -45,8 +45,16 @@ object DataProcessor extends StreamingService {
     implicit val ec: ExecutionContext = ExecutionContext.fromExecutor(ecService)
     import com.barisbolkan.mystroid.core.configuration.Settings._
 
+    val decider: Supervision.Decider = {
+      case ex: Exception =>
+        system.log.error(s"Data streaming has failed. The reason: ${ex.toString}")
+        Supervision.Stop
+    }
+
     // Start processing
-    consume(switch).run()
+    consume(switch)
+      .withAttributes(ActorAttributes.supervisionStrategy(decider))
+      .run()
 
     // System termination
     // TODO: Get the ExecutionContext into the ActorSystem

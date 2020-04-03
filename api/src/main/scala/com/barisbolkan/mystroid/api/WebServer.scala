@@ -45,10 +45,16 @@ object WebServer extends SettingsSupport
     val mongoClient = MongoClients.create(config.mongo.connectionString)
     implicit val db = mongoClient.getDatabase(config.mongo.dbName)
 
+    val decider: Supervision.Decider = {
+      case ex: Exception =>
+        system.log.error(s"Webserver consuming stream has failed. The reason: ${ex.toString}")
+        Supervision.Stop
+    }
+
     // Bind server
     val server: Future[(ServerBinding, UniqueKillSwitch)] = for {
       binding <- Http.apply().bindAndHandle(new MystroidRoutes().routes, host, port)
-      switch = persistenceGraph.run()
+      switch = persistenceGraph.withAttributes(ActorAttributes.supervisionStrategy(decider)).run()
     } yield (binding, switch)
     context.pipeToSelf(server) {
       case Success((binding, switch)) => Started(binding, switch)
