@@ -29,7 +29,7 @@ trait DataService extends JsonSupport {
   lazy val pubsubSource: Source[ReceivedMessage, Future[Cancellable]] = GooglePubSub.subscribePolling(
     PullRequest()
       .withSubscription(config.pubsub.subscription)
-      .withMaxMessages(10)
+      .withMaxMessages(5)
     , 1.second)
 
   /**
