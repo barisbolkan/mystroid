@@ -13,7 +13,7 @@ object Dependencies {
   val akkaDiscovery = "com.typesafe.akka" %% "akka-discovery" % akkaVersion
   val akkaHttp = "com.typesafe.akka" %% "akka-http" % akkaHttpVersion
   val akkaHttp2 = "com.typesafe.akka" %% "akka-http2-support" % akkaHttpVersion
-  val pubsub = "com.lightbend.akka" %% "akka-stream-alpakka-google-cloud-pub-sub-grpc" % "1.1.2"
+  val pubsub = "com.lightbend.akka" %% "akka-stream-alpakka-google-cloud-pub-sub-grpc" % "2.0.0-RC2"
   val alpakkaMongo = "com.lightbend.akka" %% "akka-stream-alpakka-mongodb" % "2.0.0-RC1"
   val mongo = "org.mongodb.scala" %% "mongo-scala-driver" % "2.8.0"
 
