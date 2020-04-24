@@ -11,7 +11,7 @@ import com.barisbolkan.mystroid.api.configuration.AppSettings
 import com.barisbolkan.mystroid.api.persitence.MystroidRepository._
 import com.barisbolkan.mystroid.api.persitence.{MongoRepository, MystroidRepository}
 import com.barisbolkan.mystroid.api.serialization.JsonSupport
-import com.google.pubsub.v1.pubsub.{AcknowledgeRequest, ReceivedMessage, StreamingPullRequest}
+import com.google.pubsub.v1.pubsub.{AcknowledgeRequest, PullRequest, ReceivedMessage}
 import com.mongodb.client.model.Filters
 import com.mongodb.reactivestreams.client.MongoDatabase
 import io.circe.parser._
@@ -26,10 +26,10 @@ trait DataService extends JsonSupport {
   /**
     * Google PubSub source to stream the messages
     */
-  lazy val pubsubSource: Source[ReceivedMessage, Future[Cancellable]] = GooglePubSub.subscribe(
-    StreamingPullRequest()
+  lazy val pubsubSource: Source[ReceivedMessage, Future[Cancellable]] = GooglePubSub.subscribePolling(
+    PullRequest()
       .withSubscription(config.pubsub.subscription)
-      .withStreamAckDeadlineSeconds(100)
+      .withMaxMessages(1)
     , 1.second)
 
   /**
