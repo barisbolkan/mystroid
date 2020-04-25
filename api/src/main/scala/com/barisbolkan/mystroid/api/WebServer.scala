@@ -48,7 +48,7 @@ object WebServer extends SettingsSupport
     val decider: Supervision.Decider = {
       case ex: Exception =>
         system.log.error(s"Webserver consuming stream has failed. The reason: ${ex.toString}")
-        Supervision.Stop
+        Supervision.Restart
     }
 
     // Bind server
