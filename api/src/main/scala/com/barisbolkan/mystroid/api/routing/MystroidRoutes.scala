@@ -17,7 +17,6 @@ import sangria.execution.{ErrorWithResolver, Executor, QueryAnalysisError}
 import sangria.macros.derive.{ObjectTypeName, deriveObjectType}
 import sangria.marshalling.circe._
 import sangria.parser.{QueryParser, SyntaxError}
-import sangria.renderer.SchemaRenderer
 import sangria.schema.{Argument, Field, IntType, ListType, ObjectType, OptionInputType, Schema, fields}
 
 import scala.concurrent.ExecutionContext
@@ -52,7 +51,7 @@ class MystroidRoutes()(implicit system: ActorSystem, materializer: Materializer,
     } ~
   path("schema.json") {
     get {
-      complete(SchemaRenderer.renderSchema(schema))
+      complete(Executor.execute(schema, sangria.introspection.introspectionQuery))
     }
   } ~
       path("graphql") {
