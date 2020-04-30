@@ -49,13 +49,13 @@ class MystroidRoutes()(implicit system: ActorSystem, materializer: Materializer,
         complete(s"Mystroid API is alive${BuildInfo.toJson}")
       }
     } ~
-//  path("schema.json") {
-//    post {
-//      complete(Executor.execute(schema, sangria.introspection.introspectionQuery))
-//    }
-//  } ~
+  path("schema.json") {
+    post {
+      complete(Executor.execute(schema, sangria.introspection.introspectionQuery))
+    }
+  } ~
       path("graphql") {
-        post {
+        get {
           parameters('query, 'operationName.?, 'variables.?) { (query, operationName, variables) =>
             QueryParser.parse(query) match {
               case Success(ast) =>
