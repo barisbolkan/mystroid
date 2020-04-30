@@ -3,7 +3,7 @@ import com.typesafe.sbt.packager.docker.Cmd
 import sbt.Keys.version
 
 ThisBuild / organization := "com.barisbolkan"
-ThisBuild / version := "0.0.9"
+ThisBuild / version := "0.1.0"
 ThisBuild / scalaVersion := "2.12.10"
 
 lazy val commonDependecies = Seq(

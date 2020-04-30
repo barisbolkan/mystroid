@@ -14,9 +14,11 @@ import io.circe.parser._
 import com.mongodb.reactivestreams.client.MongoDatabase
 import sangria.ast.Document
 import sangria.execution.{ErrorWithResolver, Executor, QueryAnalysisError}
+import sangria.introspection.IntrospectionSchema
 import sangria.macros.derive.{ObjectTypeName, deriveObjectType}
 import sangria.marshalling.circe._
 import sangria.parser.{QueryParser, SyntaxError}
+import sangria.renderer.SchemaRenderer
 import sangria.schema.{Argument, Field, IntType, ListType, ObjectType, OptionInputType, Schema, fields}
 
 import scala.concurrent.ExecutionContext
@@ -49,6 +51,11 @@ class MystroidRoutes()(implicit system: ActorSystem, materializer: Materializer,
         complete(s"Mystroid API is alive${BuildInfo.toJson}")
       }
     } ~
+  path("schema.json") {
+    get {
+      complete(SchemaRenderer.renderSchema(schema)
+    }
+  } ~
       path("graphql") {
         get {
           parameters('query, 'operationName.?, 'variables.?) { (query, operationName, variables) =>
