@@ -3,7 +3,9 @@ package com.barisbolkan.mystroid.api.persitence
 import java.time.{Instant, ZonedDateTime}
 
 import akka.Done
+import akka.stream.Materializer
 import akka.stream.alpakka.mongodb.DocumentReplace
+import akka.stream.alpakka.mongodb.scaladsl.MongoSource
 import akka.stream.alpakka.mongodb.scaladsl.MongoSink
 import akka.stream.scaladsl.Sink
 import com.barisbolkan.mystroid.api.persitence.MystroidRepository.{ApproachData, AstroidInfo, Diameter, ZonedDateTimeCodec}
@@ -16,7 +18,7 @@ import org.bson.{BsonReader, BsonWriter}
 import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
 import org.mongodb.scala.bson.codecs.Macros._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.ClassTag
 
 trait MongoRepository {
@@ -26,11 +28,12 @@ trait MongoRepository {
     codec(db).getCollection(collectionName, implicitly[ClassTag[T]].runtimeClass.asInstanceOf[Class[T]])
   protected def codec(db: MongoDatabase): MongoDatabase
 
-//  def read[T : Decoder]()(implicit db: MongoDatabase): Source[Option[T], NotUsed] =
-//    MongoSource(col(db).find()).map(i => decode(i.toJson).toOption)
-
   def update[T : ClassTag]()(implicit db: MongoDatabase): Sink[DocumentReplace[T], Future[Done]] = {
     MongoSink.replaceOne(col[T](db), new ReplaceOptions().upsert(true))
+  }
+
+  def readAll[T: ClassTag](take: Int)(implicit db: MongoDatabase, ec: ExecutionContext, materializer: Materializer): Future[Seq[T]] = {
+    MongoSource(col[T](db).find().limit(take)).runWith(Sink.seq[T])
   }
 }
 

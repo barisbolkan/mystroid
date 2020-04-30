@@ -27,7 +27,9 @@ object Dependencies {
   val circeCore = "io.circe" %% "circe-core" % circeVersion
   val circeGeneric = "io.circe" %% "circe-generic" % circeVersion
   val circeParser = "io.circe" %% "circe-parser" % circeVersion
-  val akkaHttpCirce = "de.heikoseeberger" %% "akka-http-circe" % "1.31.0"
+  val akkaHttpCirce = "de.heikoseeberger" %% "akka-http-circe" % "1.27.0"
+  val sangria = "org.sangria-graphql" %% "sangria" % "1.4.2"
+  val sangriaCirce = "org.sangria-graphql" %% "sangria-circe" % "1.2.1"
 
   // Tests
   val testKit = "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion

@@ -3,7 +3,7 @@ import com.typesafe.sbt.packager.docker.Cmd
 import sbt.Keys.version
 
 ThisBuild / organization := "com.barisbolkan"
-ThisBuild / version := "0.0.8"
+ThisBuild / version := "0.0.9"
 ThisBuild / scalaVersion := "2.12.10"
 
 lazy val commonDependecies = Seq(
@@ -24,7 +24,7 @@ lazy val api = (project in file("api"))
     buildInfoOptions += BuildInfoOption.ToJson,
     mainClass in Compile := Some("com.barisbolkan.mystroid.api.WebServer"),
     libraryDependencies ++= commonDependecies ++ Seq(
-      mongo, alpakkaMongo,
+      mongo, alpakkaMongo, sangria, akkaHttpCirce, sangriaCirce,
       streamTestKit % Test
     ),
     packageName in Docker := "mystorid/" + name.value,
