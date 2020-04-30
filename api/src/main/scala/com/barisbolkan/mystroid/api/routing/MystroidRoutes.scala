@@ -50,7 +50,7 @@ class MystroidRoutes()(implicit system: ActorSystem, materializer: Materializer,
       }
     } ~
   path("schema.json") {
-    get {
+    post {
       complete(Executor.execute(schema, sangria.introspection.introspectionQuery))
     }
   } ~
