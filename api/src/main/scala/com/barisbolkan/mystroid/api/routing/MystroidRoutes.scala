@@ -8,13 +8,12 @@ import akka.stream.Materializer
 import com.barisbolkan.mystroid.api.BuildInfo
 import com.barisbolkan.mystroid.api.persitence.MystroidRepository
 import com.barisbolkan.mystroid.api.persitence.MystroidRepository.{AstroidInfo, Diameter}
+import com.mongodb.reactivestreams.client.MongoDatabase
 import de.heikoseeberger.akkahttpcirce.ErrorAccumulatingCirceSupport._
 import io.circe._
 import io.circe.parser._
-import com.mongodb.reactivestreams.client.MongoDatabase
 import sangria.ast.Document
 import sangria.execution.{ErrorWithResolver, Executor, QueryAnalysisError}
-import sangria.introspection.IntrospectionSchema
 import sangria.macros.derive.{ObjectTypeName, deriveObjectType}
 import sangria.marshalling.circe._
 import sangria.parser.{QueryParser, SyntaxError}
@@ -53,7 +52,7 @@ class MystroidRoutes()(implicit system: ActorSystem, materializer: Materializer,
     } ~
   path("schema.json") {
     get {
-      complete(SchemaRenderer.renderSchema(schema)
+      complete(SchemaRenderer.renderSchema(schema))
     }
   } ~
       path("graphql") {
