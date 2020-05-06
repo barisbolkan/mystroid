@@ -54,7 +54,7 @@ class MystroidRoutes()(implicit system: ActorSystem, materializer: Materializer,
     }
   } ~
       path("graphql") {
-        get {
+        post {
           parameters('query, 'operationName.?, 'variables.?) { (query, operationName, variables) =>
             QueryParser.parse(query) match {
               case Success(ast) =>
