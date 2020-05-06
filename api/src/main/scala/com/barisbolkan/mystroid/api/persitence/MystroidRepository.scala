@@ -10,9 +10,9 @@ import akka.stream.scaladsl.Sink
 import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.reactivestreams.client.{MongoCollection, MongoDatabase}
 import org.bson.codecs.configuration.CodecRegistries.{fromCodecs, fromProviders, fromRegistries}
-import org.bson.codecs.pojo.annotations.BsonProperty
 import org.bson.codecs.{Codec, DecoderContext, EncoderContext}
 import org.bson.{BsonReader, BsonWriter}
+import org.mongodb.scala.bson.annotations.BsonProperty
 import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
 import org.mongodb.scala.bson.codecs.Macros._
 
