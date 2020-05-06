@@ -6,8 +6,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.Materializer
 import com.barisbolkan.mystroid.api.BuildInfo
-import com.barisbolkan.mystroid.api.persitence.MystroidRepository
-import com.barisbolkan.mystroid.api.persitence.MystroidRepository.{AstroidInfo, Diameter}
+import com.barisbolkan.mystroid.api.persitence.{Diameter, MystroidRepository}
 import com.mongodb.reactivestreams.client.MongoDatabase
 import de.heikoseeberger.akkahttpcirce.ErrorAccumulatingCirceSupport._
 import io.circe._
@@ -37,7 +36,7 @@ class MystroidRoutes()(implicit system: ActorSystem, materializer: Materializer,
       name = "astroids",
       fieldType = ListType(DiameterType),
       arguments = (limitArg :: offsetArg :: Nil),
-      resolve = ctx => repository.readAll[AstroidInfo](ctx arg limitArg).map(_.map(_.estimatedDiameter))
+      resolve = ctx => repository.readAll[Diameter](ctx arg limitArg)
     )
   )
 

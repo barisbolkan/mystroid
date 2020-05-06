@@ -8,8 +8,7 @@ import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, RunnableGraph, Source}
 import akka.stream.{ClosedShape, KillSwitches, UniqueKillSwitch}
 import com.barisbolkan.mystroid.api.WebServer.config
 import com.barisbolkan.mystroid.api.configuration.AppSettings
-import com.barisbolkan.mystroid.api.persitence.MystroidRepository._
-import com.barisbolkan.mystroid.api.persitence.{MongoRepository, MystroidRepository}
+import com.barisbolkan.mystroid.api.persitence.{AstroidInfo, MongoRepository, MystroidRepository}
 import com.barisbolkan.mystroid.api.serialization.JsonSupport
 import com.google.pubsub.v1.pubsub.{AcknowledgeRequest, PullRequest, ReceivedMessage}
 import com.mongodb.client.model.Filters
@@ -48,7 +47,7 @@ trait DataService extends JsonSupport {
 
 
   /**
-    * Converts the [[com.barisbolkan.mystroid.api.persitence.MystroidRepository.AstroidInfo]] into
+    * Converts the [[com.barisbolkan.mystroid.api.persitence.AstroidInfo]] into
     * [[akka.stream.alpakka.mongodb.DocumentUpdate]] to feed the downstream with updates
     */
   protected[processing] lazy val astroid2UpdateFlow: Flow[AstroidInfo, DocumentReplace[AstroidInfo], NotUsed] =

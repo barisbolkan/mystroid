@@ -1,18 +1,16 @@
 package com.barisbolkan.mystroid.api.persitence
 
-import java.time.{Instant, ZonedDateTime}
+import java.time.OffsetDateTime
 
 import akka.Done
 import akka.stream.Materializer
 import akka.stream.alpakka.mongodb.DocumentReplace
-import akka.stream.alpakka.mongodb.scaladsl.MongoSource
-import akka.stream.alpakka.mongodb.scaladsl.MongoSink
+import akka.stream.alpakka.mongodb.scaladsl.{MongoSink, MongoSource}
 import akka.stream.scaladsl.Sink
-import com.barisbolkan.mystroid.api.persitence.MystroidRepository.{ApproachData, AstroidInfo, Diameter, ZonedDateTimeCodec}
 import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.reactivestreams.client.{MongoCollection, MongoDatabase}
 import org.bson.codecs.configuration.CodecRegistries.{fromCodecs, fromProviders, fromRegistries}
-import org.bson.codecs.configuration.CodecRegistry
+import org.bson.codecs.pojo.annotations.BsonProperty
 import org.bson.codecs.{Codec, DecoderContext, EncoderContext}
 import org.bson.{BsonReader, BsonWriter}
 import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
@@ -37,66 +35,33 @@ trait MongoRepository {
   }
 }
 
+case class MissDistance(astronomical: Double, lunar: Double, kilometers: Double, miles: Double)
+case class RelativeVelocity(kilometersPerSecond: Double, kilometersPerHour: Double, milesPerHour: Double)
+case class ApproachData(date: OffsetDateTime, relativeVelocity: RelativeVelocity, missDistance: MissDistance, orbitingBody: String)
+case class Diameter(min: Double, max: Double)
+case class AstroidInfo(@BsonProperty("_id") id: Int, neoRefId: Int, name: String, jplUrl: Option[String], absoluteMagnitude: Double,
+                       estimatedDiameter: Map[String, Diameter], isHazardous: Boolean, closeApproachData: List[ApproachData])
+
 trait MystroidRepository extends MongoRepository {
   protected val collectionName: String = "astroid-info"
 
+  // Codec for decoding and encoding [[OffsetDateTime]]
+  class OffsetDateTimeCodec extends Codec[OffsetDateTime] {
+    override def decode(reader: BsonReader, decoderContext: DecoderContext): OffsetDateTime =
+      OffsetDateTime.parse(reader.readString)
+
+    override def encode(writer: BsonWriter, value: OffsetDateTime, encoderContext: EncoderContext): Unit =
+      writer.writeString(value.toString)
+
+    override def getEncoderClass: Class[OffsetDateTime] = classOf[OffsetDateTime]
+  }
+
   override protected def codec(db: MongoDatabase): MongoDatabase = db.withCodecRegistry(
     fromRegistries(
-      fromProviders(classOf[Diameter], classOf[ApproachData], classOf[AstroidInfo]),
-      fromCodecs(new ZonedDateTimeCodec()),
+      fromProviders(classOf[MissDistance], classOf[RelativeVelocity], classOf[Diameter],
+        classOf[ApproachData], classOf[AstroidInfo]), fromCodecs(new OffsetDateTimeCodec()),
       DEFAULT_CODEC_REGISTRY
     )
   )
 }
-object MystroidRepository extends MystroidRepository {
-
-  case class Diameter(min: Double, max: Double)
-  case class ApproachData(date: ZonedDateTime, velocity: Double, missDistance: Double)
-  case class AstroidInfo(id: String, neoRefId: String, name: String, absoluteMagnitude: Double,
-                         estimatedDiameter: Diameter, isHazardous: Boolean, closeApproachData: List[ApproachData])
-
-  class AstroidInfoCodec(registry: CodecRegistry) extends Codec[AstroidInfo] {
-
-    private[this] val diameterCodec = registry.get(classOf[Diameter])
-    private[this] val approachDataCodec = registry.get(classOf[ApproachData])
-
-    override def decode(reader: BsonReader, decoderContext: DecoderContext): AstroidInfo = {
-      null
-    }
-
-    override def encode(writer: BsonWriter, value: AstroidInfo, encoderContext: EncoderContext): Unit = {
-      writer.writeStartDocument()
-
-      writer.writeString("_id", value.id)
-      writer.writeString("neoRefId", value.neoRefId)
-      writer.writeString("name", value.name)
-      writer.writeDouble("absoluteMagnitude", value.absoluteMagnitude)
-
-      writer.writeName("estimatedDiameter")
-      diameterCodec.encode(writer, value.estimatedDiameter, encoderContext)
-
-      writer.writeBoolean("isHazardous", value.isHazardous)
-
-      writer.writeStartArray("closeApproachData")
-      value.closeApproachData.foreach(cad => approachDataCodec.encode(writer, cad, encoderContext))
-      writer.writeEndArray()
-
-      writer.writeDateTime("modifiedAt", Instant.now().toEpochMilli)
-
-      writer.writeEndDocument()
-    }
-
-    override def getEncoderClass: Class[AstroidInfo] = classOf[AstroidInfo]
-  }
-
-  // Codec for decoding and encoding [[ZonedDateTime]]
-  class ZonedDateTimeCodec extends Codec[ZonedDateTime] {
-    override def decode(reader: BsonReader, decoderContext: DecoderContext): ZonedDateTime =
-      ZonedDateTime.parse(reader.readString)
-
-    override def encode(writer: BsonWriter, value: ZonedDateTime, encoderContext: EncoderContext): Unit =
-      writer.writeString(value.toString)
-
-    override def getEncoderClass: Class[ZonedDateTime] = classOf[ZonedDateTime]
-  }
-}
+object MystroidRepository extends MystroidRepository
