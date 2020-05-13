@@ -1,6 +1,6 @@
 package com.barisbolkan.mystroid.api.persitence
 
-import java.time.OffsetDateTime
+import java.time.{Instant, OffsetDateTime, ZoneId}
 
 import akka.Done
 import akka.stream.Materializer
@@ -48,10 +48,10 @@ trait MystroidRepository extends MongoRepository {
   // Codec for decoding and encoding [[OffsetDateTime]]
   class OffsetDateTimeCodec extends Codec[OffsetDateTime] {
     override def decode(reader: BsonReader, decoderContext: DecoderContext): OffsetDateTime =
-      OffsetDateTime.parse(reader.readString)
+      OffsetDateTime.ofInstant(Instant.ofEpochMilli(reader.readInt64()), ZoneId.of("UTC"))
 
     override def encode(writer: BsonWriter, value: OffsetDateTime, encoderContext: EncoderContext): Unit =
-      writer.writeString(value.toString)
+      writer.writeInt64(value.toInstant.toEpochMilli)
 
     override def getEncoderClass: Class[OffsetDateTime] = classOf[OffsetDateTime]
   }
