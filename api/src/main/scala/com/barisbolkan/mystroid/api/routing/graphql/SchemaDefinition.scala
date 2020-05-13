@@ -16,6 +16,10 @@ import scala.util.{Failure, Success, Try}
 
 trait SchemaDefinition {
 
+  implicit val db: MongoDatabase
+  implicit val ec: ExecutionContext
+  implicit val materializer: Materializer
+
   lazy val repository: MystroidRepository = MystroidRepository
 
   case object DateCoercionViolation extends ValueCoercionViolation("Date value expected")
@@ -66,7 +70,7 @@ trait SchemaDefinition {
   val limitArg = Argument("limit", OptionInputType(IntType), defaultValue = 20)
   val offsetArg = Argument("offset", OptionInputType(IntType), defaultValue = 0)
 
-  def schema()(implicit db: MongoDatabase, ec: ExecutionContext, materializer: Materializer) =
+  val schema =
     Schema(query = ObjectType("Query",
       fields(List[Field[Unit, Unit]](
         Field(name = "astroids", fieldType = ListType(AstroidInfoType), arguments = (limitArg :: offsetArg :: Nil),

@@ -20,7 +20,7 @@ import scala.concurrent.ExecutionContext
 import scala.util.control.NonFatal
 import scala.util.{Failure, Success}
 
-class MystroidRoutes()(implicit system: ActorSystem, materializer: Materializer, ec: ExecutionContext, db: MongoDatabase)
+class MystroidRoutes()(implicit val system: ActorSystem, val materializer: Materializer, val ec: ExecutionContext, val db: MongoDatabase)
   extends SchemaDefinition {
 
   lazy val routes: Route =
